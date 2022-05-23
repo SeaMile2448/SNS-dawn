@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -51,8 +52,11 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'username' => 'required|string|max:255',
             'mail' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:4|confirmed',
-        ]);
+            'password' => 'required|string|min:4|same:password-confirm',
+        ],['username.required' => '入力必須',
+           'mail.required' => '入力必須',
+           'password.required' => '入力必須' ]
+        )->validate();
     }
 
     /**
@@ -77,15 +81,25 @@ class RegisterController extends Controller
 
     public function register(Request $request){
         if($request->isMethod('post')){
+            //Dump, Die, Debug関数　中身が見れる
+            //ddd($request -> input());
+
             $data = $request->input();
+            //ddd($data);
+             $this->validator($data);
+
 
             $this->create($data);
             return redirect('added');
         }
+        //authディレクトリの中にあるregister.blade.phpを呼び出す
         return view('auth.register');
     }
 
     public function added(){
-        return view('auth.added');
+        //authディレクトリの中にあるadded.blade.phpを呼び出す
+        //read機能を実装
+        $list = DB::table('users')-> latest() -> first();
+        return view('auth.added',['list'=>$list]);
     }
 }

@@ -6,16 +6,16 @@
 
 <h2>新規ユーザー登録</h2>
 
-{{ Form::label('ユーザー名') }}
-{{ Form::text('username',null,['class' => 'input']) }}
+{{ Form::label('username','ユーザー名') }}
+{{ Form::text('username',null,['class' => 'input','id' => 'username']) }}
 
-{{ Form::label('メールアドレス') }}
+{{ Form::label('mail','メールアドレス') }}
 {{ Form::text('mail',null,['class' => 'input']) }}
 
-{{ Form::label('パスワード') }}
+{{ Form::label('password','パスワード') }}
 {{ Form::text('password',null,['class' => 'input']) }}
 
-{{ Form::label('パスワード確認') }}
+{{ Form::label('password-confirm','パスワード確認') }}
 {{ Form::text('password-confirm',null,['class' => 'input']) }}
 
 {{ Form::submit('登録') }}
@@ -23,6 +23,16 @@
 <p><a href="/login">ログイン画面へ戻る</a></p>
 
 {!! Form::close() !!}
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 
 @endsection
